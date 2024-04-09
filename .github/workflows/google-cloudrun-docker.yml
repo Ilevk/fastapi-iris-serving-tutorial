@@ -31,6 +31,9 @@ jobs:
 
       - name: Build and Push Container
         run: |-
+          echo '${{ secrets.GCP_CREDENTIALS }}' >> ./credentials.json
+          gcloud auth login --brief --cred-file="./credentials.json"
+          gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev
           docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}" ./
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}/${{ env.SERVICE }}:${{ github.sha }}"
 
